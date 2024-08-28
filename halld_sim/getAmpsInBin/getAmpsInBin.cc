@@ -1,0 +1,273 @@
+#include <iostream>
+#include <set>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <cassert>
+#include <cstdlib>
+#include <unistd.h>
+
+// you need to modify this to your amptools location
+#include "IUAmpTools/FitResults.h"
+
+using namespace std;
+
+int main( int argc, char* argv[] ){
+    if (argc!=7){
+        cout << "Requires 5 arguments: " << endl;
+        cout << "1. The original cfg file, just to get the waveset from" << endl;
+        cout << "2. The fit file which should be output from the `fit` program" << endl;
+        cout << "3. polarization string that is underscore separate. i.e. 000_045_090" << endl;
+        cout << "4. true to acceptance correct. Anything else will not correct" << endl;
+        cout << "5. wave set" << endl;
+        cout << "6. Reaction name" << endl;
+        exit(-1);
+    }
+    string cfgFile(argv[1]);
+    string resultsFile(argv[2]);
+    string polString(argv[3]);
+    bool doAcceptanceCorrection;
+    if (string{argv[4]}=="true")
+        doAcceptanceCorrection=true;
+    else
+        doAcceptanceCorrection=false;
+    string wset(argv[5]);
+
+    cout << "Reading " << resultsFile << endl;
+    FitResults results( resultsFile.c_str() );
+    //string fitName="NAME";
+    string fitName=argv[6];
+
+    // Create output file
+    //string outFile="amplitudes.txt";
+    string outFile="amplitudes.csv";
+    string line = "";
+    ofstream myfile;
+    myfile.open(outFile);
+
+
+    // Parse the cfg file name to determine the waveset
+    string delimiter = "_";
+    vector<string> lmes;
+    size_t pos = 0;
+    std::string token;
+    while ((pos = wset.find(delimiter)) != std::string::npos) {
+        token = wset.substr(0, pos);
+        lmes.push_back(token);
+        wset.erase(0, pos + delimiter.length());
+    }
+    lmes.push_back(wset);
+//    lmes.push_back(cfgFile.substr(0,cfgFile.find("(")));
+
+    // Parse the polarization string to determine polarizations to consider
+    vector<string> polarizations;
+    pos = 0;
+    while ((pos = polString.find(delimiter)) != std::string::npos) {
+        token = polString.substr(0, pos);
+        polarizations.push_back(token);
+        polString.erase(0, pos + delimiter.length());
+    }
+    polarizations.push_back(polString);
+
+    // **** HEADER FOR THE INTENSITIES
+    for (auto lme: lmes){
+        cout << lme << "\t" << lme+"_err" << "\t"; 
+	line += lme+","+lme+"_err"+",";
+    }
+    cout << "all\tall_err\t";
+    line += "all,all_err,";
+
+    // **** Extra header summing L-waves and e-reflectivities. i.e. allows us to sum all D-waves in positive reflectivity.
+    map<string,set<string>> les; // mapping a given L to the potential reflectivities, e. Wanted a general way to access which wave/reflectivity combinations there are
+    for (auto lme: lmes){
+        string L=string{lme[0]};
+        string e=string{lme.back()};
+        if (les.find(L)==les.end())
+            les[L]=set<string>{e};
+        else{
+            if (les[L].find(e)==les[L].end())
+                les[L].insert(e);
+        }
+    }
+    map<string, vector<string>> wave_ref_amps; // map le to a vector of amplitudes to get the intensity with 
+    for (auto le: les){
+        for (auto e: le.second){
+            cout << le.first << e << "\t" << le.first << e << "_err\t"; 
+            line += le.first+e+","+le.first+e+"_err,"; 
+            wave_ref_amps[le.first+e] = vector<string>{};
+        }
+    }
+
+    // **** HEADER FOR THE PHASES
+    int nPhases=0;
+    set<set<string>> usedPhases;
+    for (auto lme_i: lmes){
+        for (auto lme_j: lmes){
+                string sign_i = string{lme_i.back()};
+                string sign_j = string{lme_j.back()};
+                if ((sign_i != sign_j) || lme_i==lme_j)
+                    continue;
+                set<string> pairWaves;
+                pairWaves.insert(lme_i);
+                pairWaves.insert(lme_j);
+                if (usedPhases.find(pairWaves) == usedPhases.end()){
+                    cout << "phase"+lme_i+lme_j+"\tphase"+lme_i+lme_j+"_err\t"; 
+		    line += "phase"+lme_i+lme_j+",phase"+lme_i+lme_j+"_err,";
+                    ++nPhases;
+                    usedPhases.insert(pairWaves);
+                }
+        }
+    }
+
+    // **** HEADER FOR THE REAL / IMAG PARTS OF THE AMPLITUDES
+    for (auto lme: lmes) {
+        cout << "Re"+lme << "\t" << "Im"+lme << "\t"; 
+	line += "Re"+lme+","+"Im"+lme+",";
+    }
+
+
+    // **** EXTRA HEADER STUFF
+    cout << "likelihood\t" << endl;
+    line += "likelihood\n";
+    myfile << line;
+    line = "";
+    
+    //string polarizations[5]={"000","045","090","135","AMO"};
+    //string polarizations[1]={"000"};
+    
+    //////////////////////////////////////////////////////////////
+    ///////////////////     GET INTENSITIES   ////////////////////
+    //////////////////////////////////////////////////////////////
+    vector<string> all={};
+    map<string,string> mapSignToRef{ {"+","Positive"},{"-","Negative"} };
+    for (auto lme: lmes){
+        string sign=string{lme.back()};
+        string refl=mapSignToRef[sign];
+        string L=string{lme[0]};
+        vector<string> etaPiAmp;
+        for (auto polarization : polarizations){
+//	    cout << endl << "	" << fitName << endl;
+//	    cout << endl << (fitName+"_"+polarization+"::"+refl+"Im::"+lme).c_str() << endl;
+//	    cout << (fitName+"_"+polarization+"::"+refl+"Re::"+lme).c_str() << endl;
+	    if(lme.find("Uniform") != std::string::npos){
+		etaPiAmp.push_back((fitName+"_"+polarization+"::Background::"+lme).c_str());
+		all.push_back((fitName+"_"+polarization+"::Background::"+lme).c_str());
+	    }
+	    else{
+        	    etaPiAmp.push_back((fitName+"_"+polarization+"::"+refl+"Im::"+lme).c_str());
+	            etaPiAmp.push_back((fitName+"_"+polarization+"::"+refl+"Re::"+lme).c_str());
+            all.push_back((fitName+"_"+polarization+"::"+refl+"Im::"+lme).c_str());
+            all.push_back((fitName+"_"+polarization+"::"+refl+"Re::"+lme).c_str());
+	    }
+            if ( wave_ref_amps.find(L+sign) == wave_ref_amps.end() ){
+                cout << "\n\nCOULD NOT FIND " << L << sign << " IN wave_ref_amps! Fix me! exiting..." << endl;
+                exit(0);
+            }
+            else{
+		    if(lme.find("Uniform") != std::string::npos){
+			wave_ref_amps[L+sign].push_back((fitName+"_"+polarization+"::Background::"+lme).c_str());
+		    }
+		    else{
+	                wave_ref_amps[L+sign].push_back((fitName+"_"+polarization+"::"+refl+"Im::"+lme).c_str());
+	                wave_ref_amps[L+sign].push_back((fitName+"_"+polarization+"::"+refl+"Re::"+lme).c_str());
+		    }
+            }
+        }
+        pair< double, double > etaPiInt = results.intensity( etaPiAmp,doAcceptanceCorrection );
+        cout << etaPiInt.first << "\t" << etaPiInt.second << "\t";
+	line += to_string(etaPiInt.first)+","+to_string(etaPiInt.second)+",";
+    }
+    pair< double, double > allInt = results.intensity( all,doAcceptanceCorrection );
+    cout << allInt.first << "\t" << allInt.second << "\t" ;
+    line += to_string(allInt.first)+","+to_string(allInt.second)+"," ;
+
+
+    for ( auto wave_ref : wave_ref_amps ){
+        //cout << "\nwave set: " << wave_ref.first << endl;
+        //for ( auto amp : wave_ref.second ){
+        //    cout << amp << endl;
+        //}
+        pair< double, double > waveSetInt = results.intensity( wave_ref.second, doAcceptanceCorrection );
+        cout << waveSetInt.first << "\t" << waveSetInt.second << "\t" ;
+        line += to_string(waveSetInt.first)+","+to_string(waveSetInt.second)+"," ;
+    }
+
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+
+    
+    //////////////////////////////////////////////////////////////
+    ///////////////////     GET PHASE DIFFS   ////////////////////
+    //////////////////////////////////////////////////////////////
+    // This phase diff only makes sense between waves of a given sum. There are 4
+    //   sums here: 2 from reflectivity and 2 from the Re and Im parts
+    usedPhases.clear();
+    for (auto lme_i: lmes){
+        for (auto lme_j: lmes){
+                string sign_i = string{lme_i.back()};
+                string sign_j = string{lme_j.back()};
+                string refl_i = mapSignToRef[sign_i];
+                if ((sign_i != sign_j) || lme_i==lme_j)
+                    continue;
+                string tag = fitName+"_000::"+refl_i+"Im::";
+		if (lme_i.find("Uniform") != std::string::npos || lme_j.find("Uniform") != std::string::npos) {
+			continue;
+		} 
+                set<string> pairWaves;
+                pairWaves.insert(lme_i);
+                pairWaves.insert(lme_j);
+                if (usedPhases.find(pairWaves) == usedPhases.end()){
+                    pair< double, double > phase = results.phaseDiff( (tag+lme_i).c_str(), (tag+lme_j).c_str() );
+                    cout << phase.first << "\t" << phase.second << "\t";
+                    line += to_string(phase.first)+","+to_string(phase.second)+",";
+                    usedPhases.insert(pairWaves);
+                }
+        }
+    }
+
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+
+    
+    //////////////////////////////////////////////////////////////
+    ///////////////////     GET REAL/IMAG PARTS   ////////////////////
+    //////////////////////////////////////////////////////////////
+    for (auto lme: lmes){
+        string sign=string{lme.back()};
+        string refl=mapSignToRef[sign];
+        string ampName=fitName+"_000::"+refl+"Re::"+lme;
+	if (lme.find("Uniform") != std::string::npos) {
+		ampName=fitName+"_000::Background::"+lme;
+	}
+        cout << results.productionParameter(ampName).real() << "\t";
+        line += to_string(results.productionParameter(ampName).real())+",";
+        cout << results.productionParameter(ampName).imag() << "\t";
+        line += to_string(results.productionParameter(ampName).imag())+",";
+    }
+        
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    cout << results.likelihood() << "\t" << endl;
+    line += to_string(results.likelihood());
+    myfile << line;
+    myfile.close();
+
+//    string newAmp="S0+";
+//    vector<string> ampVec;
+//    ampVec.push_back(newAmp);
+//    map<string, complex<double>> prodParMap = results.ampProdParMap();
+//    for (auto ele: prodParMap){
+//        cout << ele.first << " " << ele.second << endl; 
+//    }
+    //cout << "complex " << newAmp << " = " << prodPar << endl; // " | intensity = " << results.intensity(ampVec).first << endl;
+
+
+//    chdir( ".." );
+    
+    return 0;
+}
