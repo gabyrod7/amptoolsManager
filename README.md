@@ -18,6 +18,7 @@ Remember that if you copy-paste these directories to your ```halld_sim``` (```sr
 * These are a lot of naiming conventions scattered througout the scripts, be careful changing them.
 * Change ```setup_trees.C``` to apply the desired event selectinos. This script applies cuts and divides the data by polarization angle. It is meant as a first pass to flat trees from a DSelector.
 * ```example_SDMEfit.py``` is copy of ```amptoolsManager.py``` for doing a PWA fit.
+* The default was set to  python3 by using the shebang ```#!/bin/python3```.
 
 # Example
 The ```amptoolsManager.py``` is the main script but we use the ```example_SDMEfit.py``` script since it is a full fledge example doing an SDME fit.
@@ -25,7 +26,6 @@ Make ```example_SDMEfit.py``` executable by running
 ```
 chmod +x example_SDMEfit.py
 ```
-note that the default was set to  python3 by using the shebang ```#!/bin/python3```.
 A CLI (command-line interface) is procided by ```example_SDMEfit.py``` check what you can do by running
 ```
 ./example_SDMEfit.py -h
