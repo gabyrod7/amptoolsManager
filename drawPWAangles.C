@@ -105,7 +105,7 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 			cout << "Get histogram from file "+fname << endl;
 
 			if(inf == NULL)	{
-				cout << fname << "does not exists" << endl;
+				cout << fname << " does not exists" << endl;
 				continue;
 			}
 			for(auto pol : pols) {
