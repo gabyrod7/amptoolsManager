@@ -34,14 +34,14 @@ def removeAmpToolsCfg(cfgFileName, nBins, waveSet, baseDirectory, fitName):
             os.remove(f'{path}/{cfgFileName}')
             print(f'Remove {path}/{cfgFileName}')
 
-def readFit(path, cfgFileName, reactionName, runPeriod):
+def readFit(path, cfgFileName, fitName, reactionName, runPeriod):
     if os.path.exists(f'{path}'):
         os.chdir(f'{path}')
     else:
         print(f'{path} does not exist')
         return
 
-    cmd = f'getAmpsInBin {cfgFileName} nominal.fit 000_045_090_135 true {path.split("/")[-1]} {reactionName}_{runPeriod}'
+    cmd = f'getAmpsInBin {cfgFileName} {fitName}.fit 000_045_090_135 true {path.split("/")[-1]} {reactionName}_{runPeriod}'
     print(cmd)
     os.system(cmd)
 

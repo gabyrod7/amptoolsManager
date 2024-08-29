@@ -141,7 +141,7 @@ def main(argv):
             sdme.readFit(fitName, nBins)
         elif analysisType == 'pwa':
             for path in paths:
-                pwa.readFit(path, cfgFileName, reactionName, runPeriod)
+                pwa.readFit(path, cfgFileName, fitName, reactionName, runPeriod)
         
     if args.draw:
         if analysisType == 'sdme':
