@@ -100,14 +100,13 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 			ibin = i*ny + j;
 			cout << ibin << endl;
 			fname = fitName+"/bin_"+to_string(ibin)+"/"+waveset+"/etapi_plot_"+waveset+".root";
+			if(gSystem->AccessPathName(fname.c_str())) {
+				cout << fname << " does not exisits" << endl;
+			}
 			inf = TFile::Open( fname.c_str(), "READ");
 			//cout << "include data for bin_"+to_string(ibin)+" and waveset "+waveset << endl;
 			cout << "Get histogram from file "+fname << endl;
 
-			if(inf == NULL)	{
-				cout << fname << " does not exists" << endl;
-				continue;
-			}
 			for(auto pol : pols) {
 				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pol+"_"+var+"dat").c_str() );
 				h1[i][j]->Add(h);
