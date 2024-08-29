@@ -1,4 +1,4 @@
-void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int n = 50, double l = 1.0, double m = -1.0, int nx = 2, int ny = 3);
+void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int nx = 2, int ny = 3);
 
 void CanvasPartition(TCanvas *C, const Int_t Nx = 2, const Int_t Ny = 2, Float_t lMargin = 0.15, Float_t rMargin = 0.05, Float_t bMargin = 0.15, Float_t tMargin = 0.05);
 
@@ -25,15 +25,16 @@ void drawPWAangles(int nBins, string fitName) {
 	gStyle->SetMarkerSize(1.5);
 
 	vector<string> waves;
+	vector<string> vars;
 
 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	plot_angles(nBins, fitName, waves, "cosTheta", 25, -1, 1, 6, 6);
-	plot_angles(nBins, fitName, waves, "phi", 25, -3.14, 3.14, 6, 6);
-	plot_angles(nBins, fitName, waves, "Phi", 25, -3.14, 3.14, 6, 6);
-	plot_angles(nBins, fitName, waves, "psi", 25, -3.14, 3.14, 6, 6);
+	vars = {"cosTheta", "phi", "Phi", "psi"};
+	for(string var : vars) {
+		plot_angles(nBins, fitName, waves, var, 6, 6);
+	}
 }
 
-void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int n = 50, double l = -1.0, double m = 1.0, int nx = 2, int ny = 3) {
+void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int nx = 2, int ny = 3) {
 	gStyle->SetOptStat(0);
 
 	if(nbins == 0) {
@@ -93,37 +94,39 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 			pad[i][j]->SetFrameFillStyle(4000);
 			pad[i][j]->cd();
 
-			h1[i][j] = new TH1F( ("h1"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", n, l, m);
-			h2[i][j] = new TH1F( ("h2"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", n, l, m);
-			h3[i][j] = new TH1F( ("h3"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", n, l, m);
+			h1[i][j] = new TH1F( ("h1"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", 25, -1, 1);
+			h2[i][j] = new TH1F( ("h2"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", 25, -1, 1);
+			h3[i][j] = new TH1F( ("h3"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", 25, -1, 1);
 	
 			ibin = i*ny + j;
-			cout << ibin << endl;
 			fname = fitName+"/bin_"+to_string(ibin)+"/"+waveset+"/etapi_plot_"+waveset+".root";
 			if(gSystem->AccessPathName(fname.c_str())) {
 				cout << fname << " does not exisits" << endl;
+				continue;
 			}
 			inf = TFile::Open( fname.c_str(), "READ");
-			//cout << "include data for bin_"+to_string(ibin)+" and waveset "+waveset << endl;
 			cout << "Get histogram from file "+fname << endl;
 
-			for(auto pol : pols) {
-				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pol+"_"+var+"dat").c_str() );
+			for(int iPol = 0; iPol < pols.size(); iPol++) {
+				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pols[iPol]+"_"+var+"dat").c_str() );
+				if(iPol == 0) {
+					h1[i][j]->SetBins(h->GetNbinsX(), h->GetXaxis()->GetXmin(), h->GetXaxis()->GetXmax());
+					h2[i][j]->SetBins(h->GetNbinsX(), h->GetXaxis()->GetXmin(), h->GetXaxis()->GetXmax());
+					h3[i][j]->SetBins(h->GetNbinsX(), h->GetXaxis()->GetXmin(), h->GetXaxis()->GetXmax());
+				}
+
 				h1[i][j]->Add(h);
 				h1[i][j]->GetXaxis()->SetTitle(h->GetXaxis()->GetTitle());
-//				delete h;
 		
-				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pol+"_"+var+"acc").c_str() );
+				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pols[iPol]+"_"+var+"acc").c_str() );
 				h2[i][j]->Add(h);
 				h2[i][j]->GetXaxis()->SetTitle(h->GetXaxis()->GetTitle());
-//				delete h;
 		
-				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pol+"_"+var+"bkg").c_str() );
+				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pols[iPol]+"_"+var+"bkg").c_str() );
 				h3[i][j]->Add(h);
 				h3[i][j]->GetXaxis()->SetTitle(h->GetXaxis()->GetTitle());
-//				delete h;
 			} // end loop over polarization angles
-	
+
 			if(h1[i][j] == NULL || h2[i][j] == NULL)	continue;
 
 			h1[i][j]->Add(h3[i][j], -1);
