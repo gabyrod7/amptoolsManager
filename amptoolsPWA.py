@@ -93,15 +93,15 @@ def runPlotBins():
     print(f'    {cmd}')
     os.system(cmd)
 
-def setupTrees():
+def setupTrees(pathToDSelectorFlatTrees):
     print('Run setup_trees.C script')
     #cmd = 'root -b -q -l setup_trees.C'
-    cmd = f'root -b -q -l \'setup_trees.C("{pathToDSelectorTrees}")\''
+    cmd = f'root -b -q -l \'setup_trees.C("{pathToDSelectorFlatTrees}")\''
     print(f'    {cmd}')
     os.system(cmd)
 
 def divideData(fitName, nBins, lowerBoundData, higherBoundData, pathToTrees, divideData_split, divideData_splitFlag, runPeriod):
     print('Run divideData.pl script')
-    cmd = f'./divideData.pl {fitName} {nBins} {lowerBoundData} {higherBoundData} {pathToTrees} {divideData_split} {divideData_splitFlag} {runPeriod}'
+    cmd = f'./divideData.pl {fitName} {nBins} {lowerBoundData} {higherBoundData} {pathToTrees} {runPeriod} {divideData_split} {divideData_splitFlag}'
     print(f'    {cmd}')
     os.system(cmd)

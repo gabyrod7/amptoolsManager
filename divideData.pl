@@ -4,8 +4,6 @@ use Cwd;
 
 $lowMass = $ARGV[2]; #is a shared lower cutoff for all 3 datas.
 $highMass = $ARGV[3]; #2 is the upper cutoff of the thrown data and 3ish is the upper cutoff for the reco/data
-#$highMass = 2.3; #2 is the upper cutoff of the thrown data and 3ish is the upper cutoff for the reco/data
-#$nBins = 65; # not sure why old me chose 65 bins... that is alot of bins and we might not have enough statistics
 $nBins= $ARGV[1] ; # 26 because it is kind of small and (2-0.7)/26 = 0.05 which is nice and round
  
 $fitName = "$ARGV[0]";
@@ -47,8 +45,7 @@ $baseGenFileName="gen";
 $baseBkgFileName="bkg";
 $baseDatFileName="dat";
 
-#@polTags=qw(_ARGV[7]_000 _$ARGV[7]_045 _$ARGV[7]_090 _$ARGV[7]_135);
-@polTags = ("_$ARGV[7]_000", "_$ARGV[7]_045", "_$ARGV[7]_090", "_$ARGV[7]_135");
+@polTags = ("_$ARGV[5]_000", "_$ARGV[5]_045", "_$ARGV[5]_090", "_$ARGV[5]_135");
 #@polTags=qw(045);
 print "DATAFILES:\n";
 foreach $polTag (@polTags){
@@ -97,23 +94,23 @@ foreach $polTag (@polTags){
     $fileTag="$baseDatFileName$polTag";
     $dataFile="$fileTag.root";
     print "splitting datatag: $dataFile\n";
-    system( "$ARGV[5] $baseDir$dataFile $fileTag $lowMass $highMass $nBins $ARGV[6]" );
+    system( "$ARGV[6] $baseDir$dataFile $fileTag $lowMass $highMass $nBins $ARGV[7]" );
 
     $fileTag="$baseBkgFileName$polTag";
     $dataFile="$fileTag.root";
     print "splitting bkgtag: $dataFile\n";
-    system( "$ARGV[5] $baseDir$dataFile $fileTag $lowMass $highMass $nBins $ARGV[6]" );
+    system( "$ARGV[6] $baseDir$dataFile $fileTag $lowMass $highMass $nBins $ARGV[7]" );
 
     $fileTag="$baseAccFileName$polTag";
     $dataFile="$fileTag.root";
     print "splitting acctag: $dataFile\n";
-    system( "$ARGV[5] $baseDir$dataFile $fileTag $lowMass $highMass $nBins $ARGV[6]" );
+    system( "$ARGV[6] $baseDir$dataFile $fileTag $lowMass $highMass $nBins $ARGV[7]" );
 
     $fileTag="$baseGenFileName$polTag";
     #$fileTag="amptools_flat_gen_000";
     $dataFile="$fileTag.root";
     print "splitting gentag: $dataFile\n";
-    system( "$ARGV[5] $baseDir$dataFile $fileTag $lowMass $highMass $nBins $ARGV[6]" );
+    system( "$ARGV[6] $baseDir$dataFile $fileTag $lowMass $highMass $nBins $ARGV[7]" );
 }
 
 # make directories to perform the fits in
