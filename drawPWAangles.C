@@ -95,7 +95,7 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 
 			h1[i][j] = new TH1F( ("h1"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", n, l, m);
 			h2[i][j] = new TH1F( ("h2"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", n, l, m);
-			h3[i][j] = new TH1F( ("h2"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", n, l, m);
+			h3[i][j] = new TH1F( ("h3"+to_string(i)+to_string(j)+waveset).c_str(), ";M(K_{S}K_{L});Intensity", n, l, m);
 	
 			ibin = i*ny + j;
 			cout << ibin << endl;
@@ -104,8 +104,10 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 			//cout << "include data for bin_"+to_string(ibin)+" and waveset "+waveset << endl;
 			cout << "Get histogram from file "+fname << endl;
 
-			if(inf == NULL)	continue;
-		
+			if(inf == NULL)	{
+				cout << fname << "does not exists" << endl;
+				continue;
+			}
 			for(auto pol : pols) {
 				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pol+"_"+var+"dat").c_str() );
 				h1[i][j]->Add(h);
