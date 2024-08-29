@@ -74,7 +74,7 @@ def main(argv):
     parser.add_argument('-s', '--setupTrees', action='store_true', help='Take flat trees from DSelector and apply cuts and divide data by polarization angle.')
     parser.add_argument('-d', '--divideData', action='store_true', help='Setup directories and data')
     parser.add_argument('-S', '--setupFit', action='store_true', help='Setup config files for fits')
-    parser.add_argument('-f', '--fit', nargs='*', type=int, help='Run fit in (default) all bins of (optional) specific bins')
+    parser.add_argument('-f', '--fit', nargs='*', type=int, help='Run fit in (default) all bins or (optional) specific bins')
     parser.add_argument('-r', '--readFit', action='store_true', help='Run readSDMEs()')
     parser.add_argument('-D', '--draw', action='store_true', help='Make plot of SDMEs or PWA mass intensities')
     parser.add_argument('-p', '--runPlotter', action='store_true', help='Run runPlotter()')
