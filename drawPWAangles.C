@@ -1,9 +1,8 @@
-void plot_mass(int nbins = 0, vector<string> waves = {""});
-void plot_angles(int nbins = 0, vector<string> waves = {""}, string var = "", int n = 50, double l = 1.0, double m = -1.0, int nx = 2, int ny = 3);
+void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int n = 50, double l = 1.0, double m = -1.0, int nx = 2, int ny = 3);
 
 void CanvasPartition(TCanvas *C, const Int_t Nx = 2, const Int_t Ny = 2, Float_t lMargin = 0.15, Float_t rMargin = 0.05, Float_t bMargin = 0.15, Float_t tMargin = 0.05);
 
-void drawPWAangles() {
+void drawPWAangles(int nBins, string fitName) {
 	gStyle->SetPadTopMargin(0.08);
 	gStyle->SetPadRightMargin(0.03);
 	gStyle->SetPadBottomMargin(0.20);
@@ -28,227 +27,13 @@ void drawPWAangles() {
 	vector<string> waves;
 
 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	// plot_mass(30, waves);
-	plot_angles(30, waves, "cosTheta", 25, -1, 1, 6, 6);
-	plot_angles(30, waves, "phi", 25, -3.14, 3.14, 6, 6);
-	plot_angles(30, waves, "Phi", 25, -3.14, 3.14, 6, 6);
-	plot_angles(30, waves, "psi", 25, -3.14, 3.14, 6, 6);
-
-//	//waves = {"Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-//	//plot_mass(18, waves);
-//	//plot_angles(18, waves, "cosTheta", 50, -1, 1, 5, 4);
-//	//plot_angles(18, waves, "phi", 50, -3.14, 3.14, 5, 4);
-//
-//	//waves = {"Pm1+", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-//	//plot_mass(18, waves);
-//	//plot_angles(18, waves, "cosTheta", 50, -1, 1, 5, 4);
-//	//plot_angles(18, waves, "phi", 50, -3.14, 3.14, 5, 4);
-//
-	waves = {"Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	// plot_mass(36, waves);
-	// plot_angles(36, waves, "cosTheta", 50, -1, 1, 5, 4);
-//	plot_angles(18, waves, "phi", 50, -3.14, 3.14, 5, 4);
-//	plot_angles(18, waves, "Phi", 50, -3.14, 3.14, 5, 4);
-//	plot_angles(18, waves, "psi", 50, -3.14, 3.14, 5, 4);
-
-	//waves = {"Pp0+", "Pp1+", "Pp1-"};
-	//plot_mass(18, waves);
-	//plot_angles(18, waves, "cosTheta", 50, -1, 1, 5, 4);
-	//plot_angles(18, waves, "phi", 50, -3.14, 3.14, 5, 4);
-
-	//waves = {"Pp0+", "Pp1+"};
-	//plot_mass(18, waves);
-	//plot_angles(18, waves, "cosTheta", 50, -1, 1, 5, 4);
-	//plot_angles(18, waves, "phi", 50, -3.14, 3.14, 5, 4);
-
-	// waves = {"Sp0+", "Sp0-", "Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	// plot_mass(36, waves);
-	// plot_angles(36, waves, "cosTheta", 50, -1, 1, 6, 6);
-	//plot_angles(18, waves, "phi", 50, -3.14, 3.14, 5, 4);
-
-	waves = {"Sp0+", "Sp0-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	// plot_mass(36, waves);
-	//waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-", "Dm2+", "Dm2-", "Dm1+", "Dm1-", "Dp0+", "Dp0-", "Dp1+", "Dp1-", "Dp2+", "Dp2-"};
-	//plot_mass(18, waves);
-
-//	//**********************************
-//	//**********************************
-//	//
-//	//	plot All P-wave and 1 F-wave
-//	//
-//	//**********************************
-//	//**********************************
-
-	vector<string> f_waves = {"Fm3+", "Fm3-", "Fm2+", "Fm2-", "Fm1+", "Fm1-", "Fp0+", "Fp0-", "Fp1+", "Fp1-", "Fp2+", "Fp2-", "Fp3+", "Fp3-"};
-
-	// for(string f_wave : f_waves) {
-	// 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	// 	//waves = {"Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	// 	//waves = {"Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fp3+"};
-	// 	waves.push_back(f_wave);
-
-	// 	plot_mass(36, waves);
-	// 	plot_angles(36, waves, "cosTheta", 25, -1, 1, 6, 6);
-	// 	plot_angles(36, waves, "phi", 25, -3.14, 3.14, 6, 6);
-	// 	plot_angles(36, waves, "Phi", 25, -3.14, 3.14, 6, 6);
-	// 	plot_angles(36, waves, "psi", 25, -3.14, 3.14, 6, 6);
-	// }
-
-	// vector<string> f_waves = {"Fm3+", "Fm3-", "Fm2+", "Fm2-", "Fm1+", "Fp0+", "Fp0-", "Fp1+", "Fp1-", "Fp2+", "Fp2-", "Fp3+", "Fp3-"};
-
-	// for(string f_wave : f_waves) {
-	// 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fm1-"};
-	// 	//waves = {"Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	// 	//waves = {"Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fp3+"};
-	// 	waves.push_back(f_wave);
-
-	// 	plot_mass(36, waves);
-	// 	plot_angles(36, waves, "cosTheta", 25, -1, 1, 6, 6);
-	// 	plot_angles(36, waves, "phi", 25, -3.14, 3.14, 6, 6);
-	// 	plot_angles(36, waves, "Phi", 25, -3.14, 3.14, 6, 6);
-	// 	plot_angles(36, waves, "psi", 25, -3.14, 3.14, 6, 6);
-	// }
+	plot_angles(nBins, fitName, waves, "cosTheta", 25, -1, 1, 6, 6);
+	plot_angles(nBins, fitName, waves, "phi", 25, -3.14, 3.14, 6, 6);
+	plot_angles(nBins, fitName, waves, "Phi", 25, -3.14, 3.14, 6, 6);
+	plot_angles(nBins, fitName, waves, "psi", 25, -3.14, 3.14, 6, 6);
 }
 
-void plot_mass(int nbins = 0, vector<string> waves = {""}) {
-	if(nbins == 0) {
-		cout << "nbins = 0" << endl << "Enter number of bins to plot" << endl;
-		exit(0);
-	}
-
-	if(waves[0] == "") {
-		cout << "No waves given" << endl;
-		exit(0);
-	}
-
-	TFile *inf, *opf;
-	TH1F *h, *h1, *h2[waves.size()], *h3;
-
-	string waveset = "";
-	string xtitle = "";
-	string dir = "";
-
-	vector<string> pols = {"000", "045", "090", "135"};
-	map<string, TH1F*> hist_map;
-	map<string, string> wave_to_tlatex = { 
-		{"Sp0+", "S^{+}_{0}"}, {"Sp0-", "S^{-}_{0}"},
-
-		{"Pm1+", "P^{+}_{-1}"}, {"Pm1-", "P_{-1}^{-}"}, 
-		{"Pp0+", "P_{0}^{+}"}, {"Pp0-", "P_{0}^{-}"}, 
-		{"Pp1+", "P_{1}^{+}"}, {"Pp1-", "P_{1}^{-}"},
-
-		{"Fm3+", "F^{+}_{-3}"}, {"Fm3-", "F_{-3}^{-}"}, 
-		{"Fm2+", "F_{-2}^{+}"},{"Fm2-", "F_{-2}^{-}"},  
-		{"Fm1+", "F^{+}_{-1}"}, {"Fm1-", "F_{-1}^{-}"}, 
-		{"Fp0+", "F_{0}^{+}"}, {"Fp0-", "F_{0}^{-}"}, 
-		{"Fp1+", "F_{1}^{+}"}, {"Fp1-", "F_{1}^{-}"}, 
-		{"Fp2-", "F_{2}^{-}"}, {"Fp2+", "F_{2}^{+}"}, 
-		{"Fp3+", "F^{+}_{3}"}, {"Fp3-", "F_{3}^{-}"}
-	};
-
-	for(auto wave : waves)	waveset += wave+"_";
-	waveset.pop_back();
-	//waves.push_back("_"+waveset);
-
-	h1 = new TH1F("h1", ";;Intensity", nbins, 1.1, 2.0);
-	h3 = new TH1F("h3", ";;Intensity", nbins, 1.1, 2.0);
-	//for(int i = 0; i < waves.size(); i++)	h2[i] = new TH1F( ("h_"+to_string(i)).c_str() , ";M(K_{S}K_{L});Intensity", 20, 1.0, 2.0);
-	for(int i = 0; i < waves.size(); i++) {
-		h2[i] = new TH1F( ("h_"+to_string(i)).c_str() , ";;Intensity", nbins, 1.1, 2.0);
-	}
-
-	for(int i = 0; i < nbins; i++) {
-		cout << "include data for bin_"+to_string(i)+" and waveset "+waveset << endl;
-
-		for(int j = 0; j < waves.size(); j++) {
-			dir = "pwa/bin_"+to_string(i)+"/"+waveset+"/etapi_plot_"+waves[j]+".root";
-			inf = TFile::Open( dir.c_str(), "READ");
-			cout << dir << endl;
-
-			if(inf == NULL)	continue;
-	
-			for(auto pol : pols) {
-				if(j == 0) {
-					h = (TH1F*)inf->Get( ("NAME_"+pol+"_Metapi_25MeVBindat").c_str() );
-					//h = (TH1F*)inf->Get( ("NAME_"+pol+"_Metapidat").c_str() );
-					//h = (TH1F*)inf->Get( ("Mkskl_dat").c_str() );
-					h1->Add(h);
-
-					h = (TH1F*)inf->Get( ("NAME_"+pol+"_Metapi_25MeVBinbkg").c_str() );
-					//h = (TH1F*)inf->Get( ("NAME_"+pol+"_Metapibkg").c_str() );
-					h3->Add(h);
-				}
-	
-				//h = (TH1F*)inf->Get("Mkskl_acc");
-				h = (TH1F*)inf->Get( ("NAME_"+pol+"_Metapi_25MeVBinacc").c_str() );
-				//h = (TH1F*)inf->Get( ("NAME_"+pol+"_Metapiacc").c_str() );
-				//h = (TH1F*)inf->Get( ("NAME_"+pol+"_Metapigen").c_str() );
-				h2[j]->Add(h);
-			} // end loop over polarization angles
-	
-			xtitle = h->GetXaxis()->GetTitle();
-
-			inf->Close();
-		} // end loop over waveset
-
-		// if(nbins == 35) break;
-	} // end loop over bins
-
-	h1->Add(h3, -1);
-
-	opf = TFile::Open( ("figs_pwaAngles/"+waveset+".root").c_str(), "RECREATE");
-	h1->Write("all");
-
-	gStyle->SetOptStat(0);
-
-	TCanvas *c = new TCanvas();
-	//TCanvas *c = new TCanvas("c", "c", 500, 500, 500, 500);
-	//c->Divide(waves.size());
-      //CanvasPartition(c, 2, 3);
-
-      //TPad *pad[2][3];
-//
-//	TPad *pad[2][2];
-
-	if(waves.size() % 2 == 0)
-		c->Divide(2, waves.size()/2);
-	else
-		c->Divide(2, waves.size()/2+1);
-
-	TLatex t;
-	t.SetTextSize(0.08);
-
-	h1->GetYaxis()->SetRangeUser(0, 1.35*h1->GetMaximum());
-	h1->GetXaxis()->SetTitle( xtitle.c_str() );
-
-	char s[100];
-	for(int i = 0; i < waves.size(); i++) {
-		c->cd(i+1);
-		h1->Draw();
-		h2[i]->SetFillColor(kYellow);
-		h2[i]->GetYaxis()->SetMaxDigits(3);
-		h2[i]->Draw("SAME HIST");
-
-		h2[i]->Write( waves[i].c_str() );
-
-		TLegend *lg = new TLegend(0.35, 0.75, 0.95, 0.9);
-		lg->SetNColumns(2);
-		lg->AddEntry(h1, "Data", "lep");
-		sprintf(s, " [%.1f%%]", h2[i]->Integral()/h1->Integral()*100);
-		lg->AddEntry(h2[i], (wave_to_tlatex[waves[i]]+s).c_str(), "f");
-
-		lg->Draw();
-
-		//sprintf(s, "#int %s = %.0f", wave_to_tlatex[waves[i]].c_str(), h2[i]->Integral());
-		//t.DrawLatex(1.65, 0.8*h1->GetMaximum(), s);
-		//t.DrawLatex(1.8, 0.8*h1->GetMaximum(), wave_to_tlatex[waves[i]].c_str());
-	}
-
-	//c->SaveAs("sp17.png");
-	c->SaveAs( ("figs_pwaAngles/hmass_"+waveset+".pdf").c_str() );
-}
-
-void plot_angles(int nbins = 0, vector<string> waves = {""}, string var = "", int n = 50, double l = -1.0, double m = 1.0, int nx = 2, int ny = 3) {
+void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int n = 50, double l = -1.0, double m = 1.0, int nx = 2, int ny = 3) {
 	gStyle->SetOptStat(0);
 
 	if(nbins == 0) {
@@ -314,7 +99,7 @@ void plot_angles(int nbins = 0, vector<string> waves = {""}, string var = "", in
 	
 			ibin = i*ny + j;
 			cout << ibin << endl;
-			fname = "pwa/bin_"+to_string(ibin)+"/"+waveset+"/etapi_plot_"+waveset+".root";
+			fname = fitName+"/bin_"+to_string(ibin)+"/"+waveset+"/etapi_plot_"+waveset+".root";
 			inf = TFile::Open( fname.c_str(), "READ");
 			//cout << "include data for bin_"+to_string(ibin)+" and waveset "+waveset << endl;
 			cout << "Get histogram from file "+fname << endl;
@@ -322,17 +107,17 @@ void plot_angles(int nbins = 0, vector<string> waves = {""}, string var = "", in
 			if(inf == NULL)	continue;
 		
 			for(auto pol : pols) {
-				h = (TH1F*)inf->Get( ("REACTION_fa18_"+pol+"_"+var+"dat").c_str() );
+				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pol+"_"+var+"dat").c_str() );
 				h1[i][j]->Add(h);
 				h1[i][j]->GetXaxis()->SetTitle(h->GetXaxis()->GetTitle());
 //				delete h;
 		
-				h = (TH1F*)inf->Get( ("REACTION_fa18_"+pol+"_"+var+"acc").c_str() );
+				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pol+"_"+var+"acc").c_str() );
 				h2[i][j]->Add(h);
 				h2[i][j]->GetXaxis()->SetTitle(h->GetXaxis()->GetTitle());
 //				delete h;
 		
-				h = (TH1F*)inf->Get( ("REACTION_fa18_"+pol+"_"+var+"bkg").c_str() );
+				h = (TH1F*)inf->Get( ("REACTION_gluex1_"+pol+"_"+var+"bkg").c_str() );
 				h3[i][j]->Add(h);
 				h3[i][j]->GetXaxis()->SetTitle(h->GetXaxis()->GetTitle());
 //				delete h;

@@ -55,7 +55,7 @@ higherBoundData = 2.6 # higher bound for mass if using split_mass
 nProcess = nBins
 fitName = 'pwa'
 reactionName = 'REACTION'
-runPeriod = 'fa18'
+runPeriod = 'gluex1'
 cfgFile.set_fit_name(fitName)
 cfgFile.set_reaction_name(reactionName)
 cfgFile.set_amplitudes('twopsZlm')
@@ -166,7 +166,7 @@ def main(argv):
         if analysisType == 'sdme':
             sdme.drawAngles(fitName)
         elif analysisType == 'pwa':
-            pwa.drawAngles()
+            pwa.drawAngles(nBins, fitName)
         
     if args.plotBins:
         if analysisType == 'sdme':

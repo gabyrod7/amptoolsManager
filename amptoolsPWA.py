@@ -62,18 +62,18 @@ def runFit(path, cfgFileName, seedFile, nFits, fitName):
     
     # os.system(f'mv {fitName}*.fit fits_results/')
 
-def runPlotter(path, plotterName):
+def runPlotter(path, plotterName, fitName):
     os.chdir(path)
     waveSet = path.split('/')[-1]
     
     partialWaves = waveSet.split('_')
     
     for wave in partialWaves:
-        cmd = f'{plotterName} nominal.fit -s {wave} -a F -F {wave} -o hist.root > plot_{wave}.log' # do not acceptance correction
+        cmd = f'{plotterName} {fitName}.fit -s {wave} -a F -F {wave} -o hist.root > plot_{wave}.log' # do not acceptance correction
         print(cmd)
         os.system(cmd)
  
-    cmd = f'{plotterName} nominal.fit -s {waveSet} -a F -F {waveSet} -o hist.root > plot_{waveSet}.log' # do not acceptance correction
+    cmd = f'{plotterName} {fitName}.fit -s {waveSet} -a F -F {waveSet} -o hist.root > plot_{waveSet}.log' # do not acceptance correction
     print(cmd)
     os.system(cmd)
 
@@ -82,9 +82,9 @@ def drawMassIntensities():
     print(cmd)
     os.system(cmd)
     
-def drawAngles():
+def drawAngles(nBins, fitName):
     print('Run drawPWAangles.C script')
-    cmd = 'root -l -b -q drawPWAangles.C'
+    cmd = f'root -l -b -q \'drawPWAangles.C({nBins}, "{fitName}")\''
     print(f'    {cmd}')
     os.system(cmd)
 
