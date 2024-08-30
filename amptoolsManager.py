@@ -144,6 +144,8 @@ def main(argv):
                 pwa.readFit(path, cfgFileName, fitName, reactionName, runPeriod)
         
     if args.draw:
+        os.chdir(baseDirectory)
+
         if analysisType == 'sdme':
             sdme.drawSDME(nBins, lowerBoundData, higherBoundData)
         elif analysisType == 'pwa':
@@ -163,6 +165,8 @@ def main(argv):
             p.starmap(runPlotter, [(path, plotterName, fitName) for path in paths])
             
     if args.drawAngles:
+        os.chdir(baseDirectory)
+
         if analysisType == 'sdme':
             sdme.drawAngles(fitName)
         elif analysisType == 'pwa':
