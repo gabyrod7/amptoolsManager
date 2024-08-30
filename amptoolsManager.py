@@ -14,6 +14,7 @@ nFits = 10
 nBootstraps = 10
 analysisType = 'sdme' # 'sdme' or 'pwa'
 
+runPeriod = 'gluex1'
 lowerBoundData = 0.15 # lower bound for t if using split_t
 higherBoundData = 1.0 # higher bound for t if using split_t
 fitName = 'amptools_fit'
@@ -31,8 +32,7 @@ divideData_splitFlag= '-e'
 # setup config file settings
 cfgFileName = 'amptools.cfg'
 cfgFile = amptoolsCfg.amptoolsCfg()
-cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in ['fa18'] for polAngle in ['000', '045', '090', '135']])
-# cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in ['gluex1'] for polAngle in ['000', '045', '090', '135']])
+cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in ['gluex1'] for polAngle in ['000', '045', '090', '135']])
 # cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in ['sp17', 'sp18', 'fa18'] for polAngle in ['000', '045', '090', '135']])
 cfgFile.set_particles('Beam Proton KShort KLong')
 cfgFile.set_fname(cfgFileName)
@@ -145,7 +145,7 @@ def main(argv):
         
     if args.draw:
         if analysisType == 'sdme':
-            sdme.drawSDME()
+            sdme.drawSDME(nBins, lowerBoundData, higherBoundData)
         elif analysisType == 'pwa':
             pwa.drawMassIntensities()
         
