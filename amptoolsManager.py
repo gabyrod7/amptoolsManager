@@ -149,7 +149,7 @@ def main(argv):
         if analysisType == 'sdme':
             sdme.drawSDME(nBins, lowerBoundData, higherBoundData)
         elif analysisType == 'pwa':
-            pwa.drawMassIntensities()
+            pwa.drawMassIntensities(fitName)
         
     if args.runPlotter:
         if analysisType == 'sdme':
