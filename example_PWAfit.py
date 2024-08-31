@@ -37,6 +37,7 @@ cfgFile.set_fit_name(fitName)
 cfgFile.set_reaction_name(reactionName)
 cfgFile.set_amplitudes('twopsZlm')
 waveSets = ['Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-']
+# waveSets = ['Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-_'+Fwave for Fwave in ['Fm3+', 'Fm2+', 'Fm1+', 'Fp0+', 'Fp1+', 'Fp2+', 'Fp3+', 'Fm3-', 'Fm2-', 'Fm1-', 'Fp0-', 'Fp1-', 'Fp2-', 'Fp3-']] # example: fit with all P-waves and one F-wave for all F-wave m-projections
 # waveSets = ['Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-', 'Sp0+_Sp0-_Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-']
 cfgFile.set_polarization('average')
     
