@@ -17,49 +17,6 @@ void drawMassIntensities(string fitName, string waveSet) {
 
     // waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
     plot(waves, fitName, nBins, number);
-
-    // waves = {"Sp0+", "Sp0-", "Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-    // plot(waves, fitName, nBins, number);
-
-    // waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fm2+", "Fm2-", "Fm1+", "Fm1-", "Fp1+", "Fp1-", "Fp2+", "Fp2-"};
-    // plot(waves, fitName, nBins, number);
-
-    // waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fm3+"};
-    // plot(waves, fitName, nBins, number);
-
-	// vector<string> f_waves = {"Fm3+", "Fm3-", "Fm2+", "Fm2-", "Fm1+", "Fm1-", "Fp0+", "Fp0-", "Fp1+", "Fp1-", "Fp2+", "Fp2-", "Fp3+", "Fp3-"};
-
-	// for(string f_wave : f_waves) {
-	// 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	// 	waves.push_back(f_wave);
-
-    //     plot(waves, fitName, nBins, number);
-
-    //     numbers.push_back(number);
-	// }
-
-    // f_waves = {"Fm3+", "Fm3-", "Fm2+", "Fm2-", "Fm1+", "Fp0+", "Fp0-", "Fp1+", "Fp1-", "Fp2+", "Fp2-", "Fp3+", "Fp3-"};
-
-	// for(string f_wave : f_waves) {
-	// 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fm1-"};
-	// 	waves.push_back(f_wave);
-
-    //     plot(waves, fitName, nBins, number);
-
-    //     numbers.push_back(number);
-	// }
-
-    // string line1 = "";
-    // string line2 = "";
-    // char s[100];
-    // for(int i = 0; i < numbers.size(); i++) {
-    //     line1 += f_waves[i]+" & ";
-    //     sprintf(s, "%.0f & ", numbers[i]*100);
-    //     line2 += s;
-    // }
-
-    // cout << line1 << endl;
-    // cout << line2 << endl;
 }
 
 void plot(vector<string> waves, string fitName, int nBins, double &number) {
@@ -193,13 +150,8 @@ void plot(vector<string> waves, string fitName, int nBins, double &number) {
         graphs[phase]->Write(phase.c_str());
     }
 
-    // TCanvas *c = new TCanvas("c", "c", 800, 600);
-    // if((waves.size()-2) % 2)    c->Divide(2, (waves.size()-2)/2+1);
-    // else                      c->Divide(2, (waves.size()-2)/2);
     TCanvas *c = new TCanvas("c", "c", 700, 600);
     c->Divide(1, lmAmps.size());
-    // if((waves.size()-2) % 2)    c->Divide(2, (lmAmps.size()-2)/2+1);
-    // else                        c->Divide(2, (lmAmps.size()-2)/2);
     
     double max = graphs["all"]->GetHistogram()->GetMaximum();
     graphs["all"]->GetYaxis()->SetRangeUser(0, 1.1*max);
@@ -237,33 +189,7 @@ void plot(vector<string> waves, string fitName, int nBins, double &number) {
             t.SetTextColor(kBlue);
             t.DrawLatex(1.3, 0.8*max, s);
         }
-
-        // cout << lmAmps[i] << " " << calculateRiemannSum(graphs[lmAmps[i]])/calculateRiemannSum(graphs["all"]) << endl;
-        // number = calculateRiemannSum(graphs[lmAmps[i]])/calculateRiemannSum(graphs["all"]);
-
-        // sprintf(s, "%s [%.0f\%]", wave_to_tlatex[lmAmps[i]].c_str(), calculateRiemannSum(graphs[lmAmps[i]])/calculateRiemannSum(graphs["all"])*100 );
-        // t.DrawLatex(1.9, 0.8*max, s);
     }
-    // for(int i = 1; i < waves.size(); i++) {
-    //     if(waves[i-1] == "P+" || waves[i-1] == "P-") continue;
-
-    //     c->cd(i);
-    //     graphs["all"]->Draw("AP");
-    //     graphs[waves[i-1]]->Draw("P");
-
-    //     // cout << graphs[waves[i-1]]->Integral()/graphs["all"]->Integral() << endl;
-    //     cout << waves[i-1] << " " << calculateRiemannSum(graphs[waves[i-1]])/calculateRiemannSum(graphs["all"]) << endl;
-    //     number = calculateRiemannSum(graphs[waves[i-1]])/calculateRiemannSum(graphs["all"]);
-    //     // cout << "   " << graphs[waves[i-1]]->Integral() << endl;
-    //     // cout << "   " << graphs["all"]->Integral() << endl;
-
-    //     sprintf(s, "%s [%.0f\%]", wave_to_tlatex[waves[i-1]].c_str(), calculateRiemannSum(graphs[waves[i-1]])/calculateRiemannSum(graphs["all"])*100 );
-    //     t.DrawLatex(1.9, 0.8*max, s);
-	// 	// t.DrawLatex(1.9, 0.8*max, wave_to_tlatex[waves[i-1]].c_str());
-    // }
-
-    // c->cd(waves.size() - 2); // -2 becasue we have added P+ and P- to the list
-    // c->cd(lmAmps.size()); // 
     c->SaveAs(("pwa_mass_intensity/"+waveset+".pdf").c_str());
     c = new TCanvas("c", "c", 800, 600);
     graphs["all"]->Draw("AP");
@@ -291,21 +217,6 @@ void plot(vector<string> waves, string fitName, int nBins, double &number) {
         t.DrawLatex(1.6, 5, phases[i].c_str());
     }
     c->SaveAs(("pwa_mass_intensity/"+waveset+"_phases.pdf").c_str());
-
-    // c = new TCanvas("c", "c", 800, 600);
-    // c->Divide(1,2);
-    
-    // c->cd(1);
-    // graphs["all"]->Draw("AP");
-    // graphs["P+"]->Draw("P");
-    // t.DrawLatex(1.9, 0.8*max, wave_to_tlatex["P+"].c_str());
-
-    // c->cd(2);
-    // graphs["all"]->Draw("AP");
-    // graphs["P-"]->Draw("P");
-    // t.DrawLatex(1.9, 0.8*max, wave_to_tlatex["P-"].c_str());
-
-    // c->SaveAs(("pwa_mass_intensity/"+waveset+"_P.pdf").c_str());
 
     opf->Close();
 }
