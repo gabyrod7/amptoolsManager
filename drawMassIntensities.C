@@ -1,25 +1,25 @@
 // addhock change to get the percentage of F waves
-void plot(vector<string> waves, string fitNme, int nBins, double &number);
+void plot(vector<string> waves, string fitName, int nBins, double &number);
 double calculateRiemannSum(TGraphErrors* graph);
 
-void drawMassIntensities(string fitNme) {	
+void drawMassIntensities(string fitName) {	
     vector<double> numbers;
     vector<string> waves;
-//    string fitNme = "/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/sdme/python_dev/kskl/pwa/";
+//    string fitName = "/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/sdme/python_dev/kskl/pwa/";
     int nBins = 30;
     double number = 0;
 
     waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-    plot(waves, fitNme, nBins, number);
+    plot(waves, fitName, nBins, number);
 
     // waves = {"Sp0+", "Sp0-", "Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-    // plot(waves, fitNme, nBins, number);
+    // plot(waves, fitName, nBins, number);
 
     // waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fm2+", "Fm2-", "Fm1+", "Fm1-", "Fp1+", "Fp1-", "Fp2+", "Fp2-"};
-    // plot(waves, fitNme, nBins, number);
+    // plot(waves, fitName, nBins, number);
 
     // waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fm3+"};
-    // plot(waves, fitNme, nBins, number);
+    // plot(waves, fitName, nBins, number);
 
 	// vector<string> f_waves = {"Fm3+", "Fm3-", "Fm2+", "Fm2-", "Fm1+", "Fm1-", "Fp0+", "Fp0-", "Fp1+", "Fp1-", "Fp2+", "Fp2-", "Fp3+", "Fp3-"};
 
@@ -27,7 +27,7 @@ void drawMassIntensities(string fitNme) {
 	// 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
 	// 	waves.push_back(f_wave);
 
-    //     plot(waves, fitNme, nBins, number);
+    //     plot(waves, fitName, nBins, number);
 
     //     numbers.push_back(number);
 	// }
@@ -38,7 +38,7 @@ void drawMassIntensities(string fitNme) {
 	// 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-", "Fm1-"};
 	// 	waves.push_back(f_wave);
 
-    //     plot(waves, fitNme, nBins, number);
+    //     plot(waves, fitName, nBins, number);
 
     //     numbers.push_back(number);
 	// }
@@ -56,7 +56,7 @@ void drawMassIntensities(string fitNme) {
     // cout << line2 << endl;
 }
 
-void plot(vector<string> waves, string fitNme, int nBins, double &number) {
+void plot(vector<string> waves, string fitName, int nBins, double &number) {
     string waveset;
     string file;
     string line;
@@ -115,7 +115,7 @@ void plot(vector<string> waves, string fitNme, int nBins, double &number) {
     opf = TFile::Open(("pwa_mass_intensity/"+waveset+".root").c_str(), "RECREATE");
 
     for(int i = 0; i < nBins; i++) {
-        file = fitNme+"bin_"+to_string(i)+"/"+waveset+"/amplitudes.csv";
+        file = fitName+"/bin_"+to_string(i)+"/"+waveset+"/amplitudes.csv";
         ifstream fin(file.c_str());
         if(!fin.is_open()) {
             cout << "Error: file " << file << " not found." << endl;

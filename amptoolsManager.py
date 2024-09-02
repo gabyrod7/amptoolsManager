@@ -8,60 +8,76 @@ from sys import argv
 import argparse
 from multiprocessing import Pool
 
-nBins = 9
-nProcess = 9
-nFits = 10
-nBootstraps = 10
-analysisType = 'sdme' # 'sdme' or 'pwa'
+# ## Do an SDME fit
+# analysisType = 'sdme' # 'sdme' or 'pwa'
+# nBins = 9
+# nProcess = 9
+# nFits = 10
+# nBootstraps = 100
 
-runPeriod = 'gluex1'
-lowerBoundData = 0.15 # lower bound for t if using split_t
-higherBoundData = 1.0 # higher bound for t if using split_t
-fitName = 'amptools_fit'
-plotterName = 'phi1020_plotter'
-seedFile = 'seed'
-pathToDSelectorFlatTrees = '/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/sdme/DSelector/'
-# pathToTrees = '/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/sdme/fits/sdme_dir/trees/'
-pathToTrees = '/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/sdme/python_dev/kskl/trees/'
-baseDirectory = os.getcwd()
-cleanOldFits = True
+# pathToDSelectorFlatTrees = '/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/sdme/DSelector/'
+# pathToTrees = '/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/sdme/python_dev/kskl/trees/'
+# baseDirectory = os.getcwd()
+# cleanOldFits = True
 
-divideData_split = 'split_t'
-divideData_splitFlag= '-e'
+# divideData_split = 'split_t' # 'split_t' or 'split_mass'
+# divideData_splitFlag= '-e'
+# lowerBoundData = 0.15 # lower bound for t if using split_t
+# higherBoundData = 1.0 # higher bound for t if using split_t
 
-# setup config file settings
-cfgFileName = 'amptools.cfg'
-cfgFile = amptoolsCfg.amptoolsCfg()
-cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in ['gluex1'] for polAngle in ['000', '045', '090', '135']])
-# cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in ['sp17', 'sp18', 'fa18'] for polAngle in ['000', '045', '090', '135']])
-cfgFile.set_particles('Beam Proton KShort KLong')
-cfgFile.set_fname(cfgFileName)
-cfgFile.set_fit_name(fitName)
-# cfgFile.set_polarization('hist')
+# runPeriod = 'gluex1'
+# fitName = 'Amptools_SDMEfit'
+# plotterName = 'phi1020_plotter'
+# seedFile = 'seed'
+
+# # setup config file settings
+# cfgFileName = 'amptools.cfg'
+# cfgFile = amptoolsCfg.amptoolsCfg()
+# cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in [runPeriod] for polAngle in ['000', '045', '090', '135']]) # fit each polarization angle separately for GlueX-I data
+# # cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in ['sp17', 'sp18', 'fa18'] for polAngle in ['000', '045', '090', '135']]) # Fit each polarization angle and each GeluX-I run period separately
+# cfgFile.set_particles('Beam Proton KShort KLong')
+# cfgFile.set_fname(cfgFileName)
+# cfgFile.set_fit_name(fitName)
+# cfgFile.set_polarization('hist') # use histogram for polarization fraction
 # cfgFile.set_pol_hist_location('/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/polarization_fraction/')
-# cfgFile.set_amplitudes('sdme')
-# cfgFile.set_parRange(True)
-# # cfgFile.set_bkgAmplitude('uniform')
-# # cfgFile.set_include_bkg(False)
+# cfgFile.set_amplitudes('sdme') # use SDME amplitudes
+# cfgFile.set_parRange(True) # needed for randomized SDME fits
+# # cfgFile.set_bkgAmplitude('uniform') # add incoherent uniform background amplitude
+# # cfgFile.set_include_bkg(False) # do not include bkgnd files in fit
 
+## Do a PWA fit
 analysisType = 'pwa'
 nBins = 30
 nProcess = 15
-plotterName = 'kskl_plotter'
+nFits = 50
+nBootstraps = 0 # not implemented for PWA
+
+pathToDSelectorFlatTrees = '/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PWA/fit_mkskl_upto_2600MeV/DSelector/'
+baseDirectory = os.getcwd()
+pathToTrees = f'{baseDirectory}/trees/'
+cleanOldFits = True
+
 divideData_split = 'split_mass'
 divideData_splitFlag= ''
 lowerBoundData = 1.1 # lower bound for mass if using split_mass
 higherBoundData = 2.6 # higher bound for mass if using split_mass
-nProcess = nBins
-fitName = 'pwa'
-reactionName = 'REACTION'
+
 runPeriod = 'gluex1'
+fitName = 'AmpTools_PWAfit'
+plotterName = 'kskl_plotter'
+reactionName = 'REACTION'
+seedFile = 'seed'
+waveSets = ['Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-']
+# waveSets = ['Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-', 'Sp0+_Sp0-_Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-']
+
+cfgFileName = 'amptools.cfg'
+cfgFile = amptoolsCfg.amptoolsCfg()
+cfgFile.set_data([runPeriod+'_'+polAngle for runPeriod in ['gluex1'] for polAngle in ['000', '045', '090', '135']]) # fit each polarization angle separately for GlueX-I data
+cfgFile.set_particles('Beam Proton KShort KLong')
+cfgFile.set_fname(cfgFileName)
 cfgFile.set_fit_name(fitName)
 cfgFile.set_reaction_name(reactionName)
 cfgFile.set_amplitudes('twopsZlm')
-waveSets = ['Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-']
-# waveSets = ['Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-', 'Sp0+_Sp0-_Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-']
-# cfgFile.set_wave_set('Pm1+_Pm1-_Pp0+_Pp0-_Pp1+_Pp1-')
 cfgFile.set_polarization('average')
     
 def main(argv):
@@ -170,7 +186,8 @@ def main(argv):
         if analysisType == 'sdme':
             sdme.drawAngles(fitName)
         elif analysisType == 'pwa':
-            pwa.drawAngles(nBins, fitName)
+            for waveSet in waveSets:
+                pwa.drawAngles(nBins, fitName, waveSet)
         
     if args.plotBins:
         if analysisType == 'sdme':

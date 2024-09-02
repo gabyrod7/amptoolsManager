@@ -77,14 +77,14 @@ def runPlotter(path, plotterName, fitName):
     print(cmd)
     os.system(cmd)
 
-def drawMassIntensities():
-    cmd = f'root -l -b -q "drawMassIntensities.C"'
+def drawMassIntensities(fitName):
+    cmd = f'root -l -b -q \'drawMassIntensities.C("{fitName}")\''
     print(cmd)
     os.system(cmd)
     
-def drawAngles(nBins, fitName):
+def drawAngles(nBins, fitName, waveSet):
     print('Run drawPWAangles.C script')
-    cmd = f'root -l -b -q \'drawPWAangles.C({nBins}, "{fitName}")\''
+    cmd = f'root -l -b -q \'drawPWAangles.C({nBins}, "{fitName}", "{waveSet}")\''
     print(f'    {cmd}')
     os.system(cmd)
 

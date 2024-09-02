@@ -2,7 +2,7 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 
 void CanvasPartition(TCanvas *C, const Int_t Nx = 2, const Int_t Ny = 2, Float_t lMargin = 0.15, Float_t rMargin = 0.05, Float_t bMargin = 0.15, Float_t tMargin = 0.05);
 
-void drawPWAangles(int nBins, string fitName) {
+void drawPWAangles(int nBins, string fitName, string waveSet) {
 	gStyle->SetPadTopMargin(0.08);
 	gStyle->SetPadRightMargin(0.03);
 	gStyle->SetPadBottomMargin(0.20);
@@ -27,11 +27,29 @@ void drawPWAangles(int nBins, string fitName) {
 	vector<string> waves;
 	vector<string> vars;
 
-	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
-	vars = {"cosTheta", "phi", "Phi", "psi"};
-	for(string var : vars) {
-		plot_angles(nBins, fitName, waves, var, 6, 6);
+	stringstream ss(waveSet);
+
+	string wave;
+	while(getline(ss, wave, '_')) {
+		waves.push_back(wave);
 	}
+
+	vars = {"cosTheta", "phi", "Phi", "psi"};
+	// waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
+	for(string var : vars) {
+		plot_angles(nBins, fitName, waves, var, 6, 5);
+	}
+
+	// vector<string> f_waves = {"Fm3+", "Fm3-", "Fm2+", "Fm2-", "Fm1+", "Fm1-", "Fp0+", "Fp0-", "Fp1+", "Fp1-", "Fp2+", "Fp2-", "Fp3+", "Fp3-"};
+
+	// for(string f_wave : f_waves) {
+	// 	waves = {"Pm1+", "Pm1-", "Pp0+", "Pp0-", "Pp1+", "Pp1-"};
+	// 	waves.push_back(f_wave);
+
+	// 	for(string var : vars) {
+	// 		plot_angles(nBins, fitName, waves, var, 6, 5);
+	// 	}
+	// }
 }
 
 void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int nx = 2, int ny = 3) {
@@ -60,6 +78,8 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 	TFile *inf, *opf;
 	TH1F *h, *h1[nx][ny], *h2[nx][ny], *h3[nx][ny];
 
+	TH1F *hmass = new TH1F("hmass", ";M(K_{S}K_{L});", 30, 1.1, 2.6);
+
 	TLatex t;
 	t.SetTextSize(0.08);
 
@@ -75,7 +95,7 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 	opf = TFile::Open(("root_files/"+var+"_"+waveset+".root").c_str(), "RECREATE");
 
 	TCanvas *c = new TCanvas();
-	CanvasPartition(c, nx, ny, 0.12, 0.03, 0.12, 0.03);
+	CanvasPartition(c, nx, ny, 0.04, 0.03, 0.06, 0.03);
 
 	TPad *pad[nx][ny];
 
@@ -131,9 +151,9 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 
 			h1[i][j]->Add(h3[i][j], -1);
 	
-			if(i == 0 && j == 0) {
-				y_max = 1.2*h1[i][j]->GetMaximum();
-			}
+			// if(i == 0 && j == 0) {
+				y_max = 1.4*h1[i][j]->GetMaximum();
+			// }
 
 			x_title = h->GetXaxis()->GetTitle();
 			h2[i][j]->GetXaxis()->SetTitle( x_title.c_str() );
@@ -151,7 +171,10 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 			h2[i][j]->Draw("HIST");
 			h1[i][j]->Draw("SAME");	
 	
-			t.DrawLatex(0.4, h1[i][j]->GetMaximum(), ("bin_"+to_string(ibin)).c_str() );
+			// t.DrawLatex(0.4, h1[i][j]->GetMaximum(), ("bin_"+to_string(ibin)).c_str() );
+			char bin[100];
+			sprintf(bin, "M(K_{S}K_{L}) = %.2f-%.2f", hmass->GetBinLowEdge(ibin+1), hmass->GetBinLowEdge(ibin+2));
+			t.DrawLatex(-0.9, 1.1*h1[i][j]->GetMaximum(), bin);
 
 			opf->cd();
 			h1[i][j]->Write( ("data_"+to_string(ibin)).c_str() );
