@@ -47,7 +47,7 @@ from multiprocessing import Pool
 
 ## Do a PWA fit
 analysisType = 'pwa'
-nBins = 30
+nBins = 75
 nProcess = 15
 nFits = 50
 nBootstraps = 0 # not implemented for PWA
@@ -166,7 +166,7 @@ def main(argv):
             sdme.drawSDME(nBins, lowerBoundData, higherBoundData)
         elif analysisType == 'pwa':
             for waveSet in waveSets:
-                pwa.drawMassIntensities(fitName, waveSet)
+                pwa.drawMassIntensities(nBins, fitName, waveSet)
         
     if args.runPlotter:
         if analysisType == 'sdme':

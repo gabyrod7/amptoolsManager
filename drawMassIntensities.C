@@ -2,11 +2,10 @@
 void plot(vector<string> waves, string fitName, int nBins, double &number);
 double calculateRiemannSum(TGraphErrors* graph);
 
-void drawMassIntensities(string fitName, string waveSet) {	
+void drawMassIntensities(int nBins, string fitName, string waveSet) {	
     vector<double> numbers;
     vector<string> waves;
 //    string fitName = "/d/grid15/gabyrod7/analysis/ksmisskl_gabyrod_gluex1_PhiSDME/sdme/python_dev/kskl/pwa/";
-    int nBins = 30;
     double number = 0;
 
     stringstream ss(waveSet);

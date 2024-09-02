@@ -77,8 +77,8 @@ def runPlotter(path, plotterName, fitName):
     print(cmd)
     os.system(cmd)
 
-def drawMassIntensities(fitName, waveSet):
-    cmd = f'root -l -b -q \'drawMassIntensities.C("{fitName}", "{waveSet}")\''
+def drawMassIntensities(nBins, fitName, waveSet):
+    cmd = f'root -l -b -q \'drawMassIntensities.C("{nBins}", "{fitName}", "{waveSet}")\''
     print(cmd)
     os.system(cmd)
     
