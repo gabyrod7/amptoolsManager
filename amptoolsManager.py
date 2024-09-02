@@ -165,7 +165,8 @@ def main(argv):
         if analysisType == 'sdme':
             sdme.drawSDME(nBins, lowerBoundData, higherBoundData)
         elif analysisType == 'pwa':
-            pwa.drawMassIntensities(fitName)
+            for waveSet in waveSets:
+                pwa.drawMassIntensities(fitName, waveSet)
         
     if args.runPlotter:
         if analysisType == 'sdme':
