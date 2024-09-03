@@ -1,4 +1,4 @@
-void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int nx = 2, int ny = 3);
+void plot_angles(int nBins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int nx = 2, int ny = 3);
 
 void CanvasPartition(TCanvas *C, const Int_t Nx = 2, const Int_t Ny = 2, Float_t lMargin = 0.15, Float_t rMargin = 0.05, Float_t bMargin = 0.15, Float_t tMargin = 0.05);
 
@@ -52,11 +52,11 @@ void drawPWAangles(int nBins, string fitName, string waveSet) {
 	// }
 }
 
-void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int nx = 2, int ny = 3) {
+void plot_angles(int nBins = 0, string fitName = "", vector<string> waves = {""}, string var = "", int nx = 2, int ny = 3) {
 	gStyle->SetOptStat(0);
 
-	if(nbins == 0) {
-		cout << "nbins = 0" << endl << "Enter number of bins to plot" << endl;
+	if(nBins == 0) {
+		cout << "nBins = 0" << endl << "Enter number of bins to plot" << endl;
 		exit(0);
 	}
 
@@ -78,7 +78,7 @@ void plot_angles(int nbins = 0, string fitName = "", vector<string> waves = {""}
 	TFile *inf, *opf;
 	TH1F *h, *h1[nx][ny], *h2[nx][ny], *h3[nx][ny];
 
-	TH1F *hmass = new TH1F("hmass", ";M(K_{S}K_{L});", 30, 1.1, 2.6);
+	TH1F *hmass = new TH1F("hmass", ";M(K_{S}K_{L});", nBins, 1.1, 2.6);
 
 	TLatex t;
 	t.SetTextSize(0.08);
