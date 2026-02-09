@@ -17,12 +17,12 @@ The ```phi1020_plotter``` and ```kskl_plotter``` are mainly copy from other plot
 Remember that if you copy these directories to your ```halld_sim``` (I put them inside ```src/programs/AmplitudeAnalysis/```) then you also need to modify ```SConscript```.
 
 # Notes
+* These scripts assume a working gluex software environment.
 * ROOT macros (those ending in .C) are not super general and will often require modifications.
 * These are a lot of naming conventions scattered througout the scripts, be careful changing them. The most difficult name schemes to keep general are from the plotter scripts since they are independent of the scripts provided here.
-* Change ```setup_trees.C``` to apply the desired event selectinos. This script applies cuts and divides the data by polarization angle. It is meant as a first pass to flat trees from a DSelector.
-** The script uses RDataFrames to filter and write new root files. The logic may not be the most general and may require some changes to work with different channels. Make sure to creat a ```pol_angle``` branch with the nominal polarization angles (0, 45, 90, 135).
+* Change ```setup_trees.C``` to apply the desired event selectinos. This script applies cuts and divides the data by polarization angle using the ```pol_angle``` variable. It is meant as a first pass to flat trees from a DSelector. The script uses RDataFrames to filter and write new root files. Make sure to creat a ```pol_angle``` branch with the nominal polarization angles (0, 45, 90, 135).
 * ```example_SDMEfit.py``` and ```example_PWAfit.py``` are copies of ```amptoolsManager.py``` for doing SDME and PWA fit. 
-* The default was set to  python3 by using the shebang ```#!/bin/python3```.
+* The default was set to  python3 by using the shebang ```#!/usr/bin/env python3```.
 
 # Example
 The ```amptoolsManager.py``` is the main script but we use the ```example_SDMEfit.py``` script since it is a full fledge example doing an SDME fit.
